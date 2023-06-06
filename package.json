@@ -1,0 +1,16 @@
+{
+  "name": "x-gov-repos",
+  "version": "1.0.0",
+  "description": "An attempt at republishing data with eleventy",
+  "main": "eleventy.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "@x-govuk/govuk-eleventy-plugin": "^5.0.2"
+  }
+}
