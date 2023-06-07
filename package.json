@@ -4,7 +4,7 @@
   "description": "An attempt at republishing data with eleventy",
   "main": "eleventy.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "npx eleventy --serve"
   },
   "keywords": [],
   "author": "",
