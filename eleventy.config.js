@@ -1,15 +1,30 @@
-const govukEleventyPlugin = require('@x-govuk/govuk-eleventy-plugin')
+// const govukEleventyPlugin = require('@x-govuk/govuk-eleventy-plugin')
+const govukEleventyPlugin = require('../govuk-eleventy-plugin')
 
 module.exports = function(eleventyConfig) {
   // Register the plugin
-  eleventyConfig.addPlugin(govukEleventyPlugin)
+  eleventyConfig.addPlugin(govukEleventyPlugin, {
+    header: {
+      organisationLogo: 'x-govuk',
+      organisationName: 'Digital Collective',
+      productName: 'Data Pages',
+      search: {
+        indexPath: '/search.json',
+        label: 'search in the data'
+      }
+    },
+    footer: {
+      copyright: {
+        text: 'Digital Collective'
+      }
+    },
+    brandColour: '#aaa',
+    fontFamily: 'open-dyslexic, system-ui, sans-serif',
+  });
 
   eleventyConfig.addCollection("entities", function(collection) {
     return collection.getFilteredByGlob("src/products/*.md");
   });
-
-  eleventyConfig.addWatchTarget('../govuk-eleventy-plugin/components/')
-  eleventyConfig.addWatchTarget('../govuk-eleventy-plugin/lib/')
 
   return {
     dataTemplateEngine: 'njk',
@@ -17,9 +32,8 @@ module.exports = function(eleventyConfig) {
     markdownTemplateEngine: 'njk',
     dir: {
       // Use layouts from the plugin
-      // layouts: 'node_modules/@x-govuk/govuk-eleventy-plugin/layouts'
-      layouts: '../govuk-eleventy-plugin/layouts',
-      includes: "../govuk-eleventy-plugin/components"
+      layouts: 'node_modules/@x-govuk/govuk-eleventy-plugin/layouts'
+      //layouts: '../govuk-eleventy-plugin/layouts'
     }
   }
 };

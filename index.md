@@ -1,5 +1,4 @@
 ---
-homepage: true
-layout: data-collection
+layout: collection
 ---
 An attempt at a data collection template.

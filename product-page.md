@@ -1,4 +1,5 @@
 ---
+homepage: true
 layout: product
 order: 1
 title: Government Code Repositories
@@ -24,4 +25,4 @@ related:
           - text: Front matter data
             href: https://www.11ty.dev/docs/data-frontmatter/
 ---
-This is my first page, built using Eleventy and `@x-govuk/govuk-eleventy-plugin`.
+Built using Eleventy and `@x-govuk/govuk-eleventy-plugin`.
