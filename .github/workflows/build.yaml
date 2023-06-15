@@ -18,7 +18,7 @@ jobs:
           cache: 'npm'
 
       - name: Install npm
-        run: 
+        run: npm install -g npm@8
 
       - name: Build
         run: |
