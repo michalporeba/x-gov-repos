@@ -1,0 +1,29 @@
+{
+    "@context": ["http://www.w3.org/ns/csvw", {"@language": "en"}],
+    "tables": [{
+      "url": "repositories.csv",
+      "tableSchema": {
+        "columns": [
+        {
+          "name": "uri",
+          "datatype": "iri"
+        },
+        {
+          "name": "type",
+          "datatype": "string"
+        },
+        {
+          "name": "repository_name",
+          "datatype": "string"
+        },
+        {
+          "name": "website",
+          "datatype": "string"
+        }
+        ]
+      }
+    }],
+    "dialect": {
+      "header": false
+    }
+  }
