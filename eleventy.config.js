@@ -31,7 +31,6 @@ module.exports = function(eleventyConfig) {
     htmlTemplateEngine: 'njk',
     markdownTemplateEngine: 'njk',
     dir: {
-      output: 'docs',
       // Use layouts from the plugin
       layouts: 'node_modules/@x-govuk/govuk-eleventy-plugin/layouts'
       //layouts: '../govuk-eleventy-plugin/layouts'
