@@ -1,5 +1,5 @@
-// const govukEleventyPlugin = require('@x-govuk/govuk-eleventy-plugin')
-const govukEleventyPlugin = require('../govuk-eleventy-plugin')
+const govukEleventyPlugin = require('@x-govuk/govuk-eleventy-plugin')
+//const govukEleventyPlugin = require('../govuk-eleventy-plugin')
 
 module.exports = function(eleventyConfig) {
   // Register the plugin
