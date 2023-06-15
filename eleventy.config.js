@@ -7,7 +7,7 @@ module.exports = function(eleventyConfig) {
     header: {
       organisationLogo: 'x-govuk',
       organisationName: 'Digital Collective',
-      productName: 'Data Pages',
+      productName: 'Gov Repositories',
       search: {
         indexPath: '/search.json',
         label: 'search in the data'
