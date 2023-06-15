@@ -11,10 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js current
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: current
+          node-version: 18
+          cache: 'npm'
+
+      name: Install npm
+        run: npm install -g npm@8
 
       - name: Build
         run: |
