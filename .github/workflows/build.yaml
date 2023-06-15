@@ -17,10 +17,12 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      - name: Install npm
+        run: 
+
       - name: Build
         run: |
-          npm install -g npm@8
-          npm ci
+          npm install
           npm run build
 
       - name: Deploy
