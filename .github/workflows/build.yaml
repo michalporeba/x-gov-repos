@@ -20,11 +20,10 @@ jobs:
       - name: Install
         run: |
           npm install -g npm@8
-          npm i @x-govuk/govuk-eleventy-plugin
-
+          
       - name: Build
         run: |
-          npm ci
+          npm ci --omit-dev
           npm run build
 
       - name: Deploy
