@@ -24,6 +24,7 @@ jobs:
       - name: Build
         run: |
           npm ci --omit-dev
+          npm i @x-govuk/govuk-eleventy-plugin
           npm run build
 
       - name: Deploy
