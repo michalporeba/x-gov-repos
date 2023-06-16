@@ -17,12 +17,14 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      - name: Install npm
-        run: npm install -g npm@8
+      - name: Install
+        run: |
+          npm install -g npm@8
+          npm i @x-govuk/govuk-eleventy-plugin
 
       - name: Build
         run: |
-          npm install
+          npm ci
           npm run build
 
       - name: Deploy
