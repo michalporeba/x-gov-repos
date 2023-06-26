@@ -6,7 +6,7 @@
   "scripts": {
     "debug": "clear && DEBUG=Eleventy* npx eleventy --serve",
     "dev": "npx eleventy --serve",
-    "build": "npx eleventy"
+    "build": "env NODE_ENV=production npx eleventy --pathprefix 'x-gov-repos'"
   },
   "keywords": [],
   "author": "",
