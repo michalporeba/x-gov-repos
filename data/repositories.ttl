@@ -1,0 +1,27 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.org/resource/> .
+
+ex:uktrade
+    dct:identifier "https://github.com/uktrade" ;
+    dct:type "Central Government" ;
+    foaf:name "Department for Business and Trade" ;
+    foaf:homepage <https://trade.gov.uk> .
+
+ex:co-cddo
+    dct:identifier "https://github.com/co-cddo" ;
+    dct:type "Central Government" ;
+    foaf:name "Office - Central Digital and Data Office" ;
+    foaf:homepage <https://cddo.cabinetoffice.gov.uk/> .
+
+ex:alphagov
+    dct:identifier "https://github.com/alphagov" ;
+    dct:type "Central Government" ;
+    foaf:name "Government Digital Service" ;
+    foaf:homepage <https://gds.blog.gov.uk/> .
+
+ex:x-govuk
+    dct:identifier "https://github.com/x-govuk" ;
+    dct:type "Community" ;
+    foaf:name "X-GOVUK" ;
+    foaf:homepage <https://x-govuk.github.io> .
