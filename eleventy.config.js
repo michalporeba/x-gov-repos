@@ -5,9 +5,8 @@ module.exports = function(eleventyConfig) {
   // Register the plugin
   eleventyConfig.addPlugin(govukEleventyPlugin, {
     header: {
-      organisationLogo: 'x-govuk',
-      organisationName: 'Digital Collective',
-      productName: 'Gov Repositories',
+      logotype: { text: "Digital Collective" },
+      productName: 'Gov Releated Repos',
       search: {
         indexPath: '/search.json',
         label: 'search in the data'
@@ -17,9 +16,7 @@ module.exports = function(eleventyConfig) {
       copyright: {
         text: 'Digital Collective'
       }
-    },
-    brandColour: '#aaa',
-    fontFamily: 'open-dyslexic, system-ui, sans-serif',
+    }
   });
 
   eleventyConfig.addCollection("entities", function(collection) {

@@ -13,6 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "@11ty/eleventy": "^2.0.1",
-    "@x-govuk/govuk-eleventy-plugin": "^5.0.2"
+    "@x-govuk/govuk-eleventy-plugin": "^6.0.4"
   }
 }
