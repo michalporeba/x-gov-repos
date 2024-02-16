@@ -1,8 +1,6 @@
 const govukEleventyPlugin = require('@x-govuk/govuk-eleventy-plugin')
-//const govukEleventyPlugin = require('../govuk-eleventy-plugin')
 
 module.exports = function(eleventyConfig) {
-  // Register the plugin
   eleventyConfig.addPlugin(govukEleventyPlugin, {
     header: {
       logotype: { text: "Digital Collective" },
@@ -20,7 +18,7 @@ module.exports = function(eleventyConfig) {
   });
 
   eleventyConfig.addCollection("entities", function(collection) {
-    return collection.getFilteredByGlob("src/products/*.md");
+    return collection.getFilteredByGlob("data/*.md");
   });
 
   return {
@@ -28,9 +26,8 @@ module.exports = function(eleventyConfig) {
     htmlTemplateEngine: 'njk',
     markdownTemplateEngine: 'njk',
     dir: {
-      // Use layouts from the plugin
-      layouts: 'node_modules/@x-govuk/govuk-eleventy-plugin/layouts'
-      //layouts: '../govuk-eleventy-plugin/layouts'
+      input: 'src',
+      layouts: '../node_modules/@x-govuk/govuk-eleventy-plugin/layouts'
     }
   }
 };
