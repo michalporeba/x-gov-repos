@@ -1,5 +1,9 @@
 "use strict";
 
+/*
+ * The code is based on https://github.com/uk-x-gov-software-community/xgov-opensource-repo-scraper
+ */
+
 import Octokat from 'octokat';
 import Promise from "bluebird";
 import { writeFileSync } from 'fs';
@@ -8,16 +12,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const processRepoFor = (org) => async (repo) => {
     console.log(`Processing ${repo.name}`);
-    //console.log('Stats');
-    //let stats = repo.stats;
-    //console.log(await stats.contributors.fetch());
-    //console.log(await stats.commitActivity.fetch());
-    // console.log();
-    // console.log('Issues');
-    // console.log(repo.issues);
-    // console.log("labels");
-    // console.log(await repo.issues.labels);
-    // console.log(await repo.issues);
     console.log('languages');
     console.log(await repo.languages.fetch());
     return {
