@@ -1,14 +1,23 @@
 "use strict";
 
+const CACHE_PATH = "repo-cache";
+
 import { Octokit } from "@octokit/rest";
 import Promise from "bluebird";
-import { writeFile } from "fs/promises";
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+import { mkdir, writeFile } from "fs/promises";
+import path from 'path';
 
 const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
 });
+
+const ensureFolderExists = async (path) => {
+    try {
+        await mkdir(path, { recursive: true });
+    } catch (error) {
+        console.error(`Error creating folder ${path}:`, error);
+    }
+};
 
 
 const checkRateLimit = async () => {
@@ -60,7 +69,7 @@ const getRepositories = (type, account) => {
 
 const processRepoFor = (account) => async (repo) => {
     console.log(` - Repository ${account}/${repo.name}`);
-    let output = {
+    return {
         account: account,
         name: repo.name,
         url: repo.html_url,
@@ -77,6 +86,7 @@ const processRepoFor = (account) => async (repo) => {
             isFork: repo.fork,
             isTemplate: repo.is_template,
             hasIssues: repo.has_issues,
+            hasDownloads: repo.has_downloads,
             hasProjects: repo.has_projects,
             hasWiki: repo.has_wiki,
             hasPages: repo.has_pages,
@@ -93,15 +103,13 @@ const processRepoFor = (account) => async (repo) => {
             stargazers: repo.stargazers_count,
             watchers: repo.watchers_count,
         },
-        language: repo.language,
+        topLanguage: repo.language,
         topics: repo.topics,
         blobs: {
             description: repo.description,
 
         }
     };
-    console.log(output);
-    return output;
 }
 
 const processAccount = async ({name, type, include}) => {
@@ -109,8 +117,29 @@ const processAccount = async ({name, type, include}) => {
     let filteredRepositories = repositories.filter(r => !include || include.includes(r.name));
     console.log(`\nAccount ${name} has ${filteredRepositories.length} repositories`);
 
-    await Promise.each(filteredRepositories, processRepoFor(name));
+    return await Promise.mapSeries(filteredRepositories, processRepoFor(name));
 };
+
+const cacheRepository = async (repo) => {
+    try {
+        let folder = path.join(CACHE_PATH, repo.account);
+        await ensureFolderExists(folder);
+
+        const data = JSON.stringify(repo, null, 2);
+
+        let file = path.join(folder, `${repo.name}.json`);
+        await writeFile(file, data);
+
+        console.log(`Cached ${repo.account}/${repo.name} in ${file}`);
+    } catch (err) {
+        console.error(`Error caching ${repo.account}/${repo.name} to file:`, err);
+    }
+}
+
+const cacheRepositories = async (repositories) => {
+    console.log("\Caching repository data in local files...");
+    await Promise.each(repositories, cacheRepository);
+}
 
 console.log("\nStarting processing of github repos...");
 
@@ -128,7 +157,9 @@ await (async () => {
             ]
         }];
 
-    await Promise.each(accounts, processAccount);
+    let repositories = (await Promise.mapSeries(accounts, processAccount)).flat();
+
+    await cacheRepositories(repositories);
 })();
 
 console.log("\nDone!");
