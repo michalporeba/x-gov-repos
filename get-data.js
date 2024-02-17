@@ -19,7 +19,6 @@ const ensureFolderExists = async (path) => {
     }
 };
 
-
 const checkRateLimit = async () => {
     try {
         const response = await octokit.rest.rateLimit.get();
@@ -34,7 +33,7 @@ const checkRateLimit = async () => {
     }
 }
 
-const getDataForOrg = async (org) => {
+const getOrgRepositories = async (org) => {
     return await octokit.paginate(octokit.rest.repos.listForOrg, {
         org: org,
         type: "public",
@@ -45,7 +44,7 @@ const getDataForOrg = async (org) => {
     });
 };
 
-const getDataForUser = async (user) => {
+const getUserRepositories = async (user) => {
     return await octokit.paginate(octokit.rest.repos.listForUser, {
         username: user,
         type: "owner",
@@ -58,16 +57,15 @@ const getDataForUser = async (user) => {
 
 const getRepositories = (type, account) => {
     try {
-        let getter = (type === "org") ? getDataForOrg : getDataForUser;
+        let getter = (type === "org") ? getOrgRepositories : getUserRepositories;
         return getter(account);
-        myVar.people = myVar.people.filter( x => x.id === "192");
     } catch (error) {
         console.error(`Error fetching repositories for ${type} ${account}!`, error);
     }
     return [];
 }
 
-const processRepoFor = (account) => async (repo) => {
+const formatRepositoryDataFor = (account) => async (repo) => {
     console.log(` - Repository ${account}/${repo.name}`);
     return {
         account: account,
@@ -117,7 +115,7 @@ const processAccount = async ({name, type, include}) => {
     let filteredRepositories = repositories.filter(r => !include || include.includes(r.name));
     console.log(`\nAccount ${name} has ${filteredRepositories.length} repositories`);
 
-    return await Promise.mapSeries(filteredRepositories, processRepoFor(name));
+    return await Promise.mapSeries(filteredRepositories, formatRepositoryDataFor(name));
 };
 
 const cacheRepository = async (repo) => {
@@ -137,13 +135,16 @@ const cacheRepository = async (repo) => {
 }
 
 const cacheRepositories = async (repositories) => {
-    console.log("\Caching repository data in local files...");
+    console.log("\nCaching repository data in local files...");
     await Promise.each(repositories, cacheRepository);
 }
 
 console.log("\nStarting processing of github repos...");
 
 await (async () => {
+    // sample accounts just for early testing.
+    // ultimately most of the accounts should come from the government.github.com
+    // with extra additions of non-qualifying accounts. 
     let accounts = [
         { name: "uktrade", type: "org",
             include: [
