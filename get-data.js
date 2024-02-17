@@ -1,6 +1,5 @@
 "use strict";
 
-// Importing the necessary modules
 import { Octokit } from "@octokit/rest";
 import Promise from "bluebird";
 import { writeFile } from "fs/promises";
@@ -15,7 +14,6 @@ const octokit = new Octokit({
 const checkRateLimit = async () => {
     try {
         const response = await octokit.rest.rateLimit.get();
-        
         const remaining = response.data.rate.remaining;
         const resetTime = new Date(response.data.rate.reset * 1000);
 
@@ -60,15 +58,58 @@ const getRepositories = (type, account) => {
     return [];
 }
 
-const processAccount = async ({name, type, include}) => {
-    console.log(`\nProcessing ${name}`);
-    sleep(50);
+const processRepoFor = (account) => async (repo) => {
+    console.log(` - Repository ${account}/${repo.name}`);
+    let output = {
+        account: account,
+        name: repo.name,
+        url: repo.html_url,
+        homepage: repo.homepage,
+        owner: repo.owner.login,
+        times: {
+            created: repo.created_at,
+            updated: repo.updated_at,
+            pushed: repo.pushed_at,
+        },
+        properties: {
+            isArchived: repo.archived,
+            isDisabled: repo.disabled,
+            isFork: repo.fork,
+            isTemplate: repo.is_template,
+            hasIssues: repo.has_issues,
+            hasProjects: repo.has_projects,
+            hasWiki: repo.has_wiki,
+            hasPages: repo.has_pages,
+            hasDiscussions: repo.has_discussions,
+        },
+        license: {
+            name: repo.license ? repo.license.name : null,
+            url: repo.license ? repo.license.url : null,
+        },
+        size: repo.size,
+        counts: {
+            forks: repo.forks_count,
+            openIssues: repo.open_issues_count,
+            stargazers: repo.stargazers_count,
+            watchers: repo.watchers_count,
+        },
+        language: repo.language,
+        topics: repo.topics,
+        blobs: {
+            description: repo.description,
 
+        }
+    };
+    console.log(output);
+    return output;
+}
+
+const processAccount = async ({name, type, include}) => {
     let repositories = await getRepositories(type, name);
     let filteredRepositories = repositories.filter(r => !include || include.includes(r.name));
-    console.log(`${name} has ${filteredRepositories.length} repositories.`);
+    console.log(`\nAccount ${name} has ${filteredRepositories.length} repositories`);
 
-    //console.log(repositories);
+    await Promise.each(filteredRepositories, processRepoFor(name));
 };
 
 console.log("\nStarting processing of github repos...");
@@ -92,3 +133,4 @@ await (async () => {
 
 console.log("\nDone!");
 await checkRateLimit();
+console.log();
