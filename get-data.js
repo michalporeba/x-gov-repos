@@ -3,7 +3,6 @@
 const CACHE_PATH = "repo-cache";
 
 import { Octokit } from "@octokit/rest";
-import Promise from "bluebird";
 import { mkdir, writeFile } from "fs/promises";
 import path from 'path';
 
@@ -65,7 +64,7 @@ const getRepositories = (type, account) => {
     return [];
 }
 
-const formatRepositoryDataFor = (account) => async (repo) => {
+const formatRepositoryDataFor = (account) => (repo) => {
     console.log(` - Repository ${account}/${repo.name}`);
     return {
         account: account,
@@ -110,15 +109,15 @@ const formatRepositoryDataFor = (account) => async (repo) => {
     };
 }
 
-const processAccount = async ({name, type, include}) => {
+const processAccount = async ({name, type, include}) => new Promise(async (res) => {
     let repositories = await getRepositories(type, name);
     let filteredRepositories = repositories.filter(r => !include || include.includes(r.name));
     console.log(`\nAccount ${name} has ${filteredRepositories.length} repositories`);
 
-    return await Promise.mapSeries(filteredRepositories, formatRepositoryDataFor(name));
-};
+    res(filteredRepositories.map(formatRepositoryDataFor(name)));
+});
 
-const cacheRepository = async (repo) => {
+const cacheRepository = async (repo) => new Promise(async (res, rej) => {
     try {
         let folder = path.join(CACHE_PATH, repo.account);
         await ensureFolderExists(folder);
@@ -129,14 +128,16 @@ const cacheRepository = async (repo) => {
         await writeFile(file, data);
 
         console.log(`Cached ${repo.account}/${repo.name} in ${file}`);
+        res();
     } catch (err) {
         console.error(`Error caching ${repo.account}/${repo.name} to file:`, err);
+        rej(err);
     }
-}
+});
 
 const cacheRepositories = async (repositories) => {
     console.log("\nCaching repository data in local files...");
-    await Promise.each(repositories, cacheRepository);
+    await Promise.allSettled(repositories.map(cacheRepository));
 }
 
 console.log("\nStarting processing of github repos...");
@@ -158,8 +159,11 @@ await (async () => {
             ]
         }];
 
-    let repositories = (await Promise.mapSeries(accounts, processAccount)).flat();
-
+    let repositories = ((
+        await Promise.allSettled(accounts.map(processAccount)))
+        .map(({value}) => value)
+        .flat()
+    );
     await cacheRepositories(repositories);
 })();
 
