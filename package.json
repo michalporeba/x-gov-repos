@@ -15,8 +15,6 @@
   "dependencies": {
     "@11ty/eleventy": "^3.0.0-alpha.5",
     "@octokit/rest": "^20.0.2",
-    "@x-govuk/govuk-eleventy-plugin": "^6.0.4",
-    "bluebird": "^3.7.2",
-    "octokat": "^0.10.0"
+    "@x-govuk/govuk-eleventy-plugin": "^6.0.4"
   }
 }
