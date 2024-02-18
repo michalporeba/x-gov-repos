@@ -19,7 +19,7 @@ There are many more accounts that don't qualify for GitHub's government communit
 
 With so much public code, there appears to be very little reuse.
 Perhaps it is because it is difficult to list and review all the existing code.
-The [xgov-opensource-repo-scraper](ttps://github.com/uk-x-gov-software-community/xgov-opensource-repo-scraper) helps, but it could be improved.
+The [xgov-opensource-repo-scraper](https://github.com/uk-x-gov-software-community/xgov-opensource-repo-scraper) helps, but it could be improved.
 
 ## Publishing data using static pages
 
