@@ -1,6 +1,10 @@
 "use strict";
 
 const CACHE_PATH = "repo-cache";
+const GITHUB_PAGESIZE = 100;
+const GITHUB_HEADERS = {
+    "X-GitHub-Api-Version": "2022-11-28",
+};
 
 import { Octokit } from "@octokit/rest";
 import { mkdir, writeFile } from "fs/promises";
@@ -21,6 +25,7 @@ const ensureFolderExists = async (path) => {
 const checkRateLimit = async () => {
     try {
         const response = await octokit.rest.rateLimit.get();
+        console.log(response);
         const remaining = response.data.rate.remaining;
         const resetTime = new Date(response.data.rate.reset * 1000);
 
@@ -32,27 +37,23 @@ const checkRateLimit = async () => {
     }
 }
 
-const getOrgRepositories = async (org) => {
-    return await octokit.paginate(octokit.rest.repos.listForOrg, {
+const getOrgRepositories = async (org) =>
+    await octokit.paginate(octokit.rest.repos.listForOrg, {
         org: org,
         type: "public",
-        per_page: 100,
-        headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+        per_page: GITHUB_PAGESIZE,
+        headers: GITHUB_HEADERS,
     });
-};
 
-const getUserRepositories = async (user) => {
-    return await octokit.paginate(octokit.rest.repos.listForUser, {
+
+const getUserRepositories = async (user) =>
+    await octokit.paginate(octokit.rest.repos.listForUser, {
         username: user,
         type: "owner",
-        per_page: 100,
-        headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+        per_page: GITHUB_PAGESIZE,
+        headers: GITHUB_HEADERS,
     });
-};
+
 
 const getRepositories = (type, account) => {
     try {
@@ -69,7 +70,6 @@ const formatRepositoryDataFor = (account) => (repo) => {
     return {
         account: account,
         name: repo.name,
-        url: repo.html_url,
         homepage: repo.homepage,
         owner: repo.owner.login,
         times: {
@@ -95,10 +95,9 @@ const formatRepositoryDataFor = (account) => (repo) => {
         },
         size: repo.size,
         counts: {
-            forks: repo.forks_count,
-            openIssues: repo.open_issues_count,
-            stargazers: repo.stargazers_count,
-            watchers: repo.watchers_count,
+            forks: repo.forks,
+            openIssues: repo.open_issues,
+            watchers: repo.watchers,
         },
         topLanguage: repo.language,
         topics: repo.topics,
@@ -109,31 +108,33 @@ const formatRepositoryDataFor = (account) => (repo) => {
     };
 }
 
-const processAccount = async ({name, type, include}) => new Promise(async (res) => {
-    let repositories = await getRepositories(type, name);
-    let filteredRepositories = repositories.filter(r => !include || include.includes(r.name));
-    console.log(`\nAccount ${name} has ${filteredRepositories.length} repositories`);
+const processAccount = async ({name, type, include}) =>
+    new Promise(async (res) => {
+        let repositories = await getRepositories(type, name);
+        let filteredRepositories = repositories.filter(r => !include || include.includes(r.name));
+        console.log(`\nAccount ${name} has ${filteredRepositories.length} repositories`);
 
-    res(filteredRepositories.map(formatRepositoryDataFor(name)));
-});
+        res(filteredRepositories.map(formatRepositoryDataFor(name)));
+    });
 
-const cacheRepository = async (repo) => new Promise(async (res, rej) => {
-    try {
-        let folder = path.join(CACHE_PATH, repo.account);
-        await ensureFolderExists(folder);
+const cacheRepository = async (repo) =>
+    new Promise(async (res, rej) => {
+        try {
+            let folder = path.join(CACHE_PATH, repo.account);
+            await ensureFolderExists(folder);
 
-        const data = JSON.stringify(repo, null, 2);
+            const data = JSON.stringify(repo, null, 2);
 
-        let file = path.join(folder, `${repo.name}.json`);
-        await writeFile(file, data);
+            let file = path.join(folder, `${repo.name}.json`);
+            await writeFile(file, data);
 
-        console.log(`Cached ${repo.account}/${repo.name} in ${file}`);
-        res();
-    } catch (err) {
-        console.error(`Error caching ${repo.account}/${repo.name} to file:`, err);
-        rej(err);
-    }
-});
+            console.log(`Cached ${repo.account}/${repo.name} in ${file}`);
+            res();
+        } catch (error) {
+            console.error(`Error caching ${repo.account}/${repo.name} to file:`, error);
+            rej(error);
+        }
+    });
 
 const cacheRepositories = async (repositories) => {
     console.log("\nCaching repository data in local files...");
@@ -145,7 +146,7 @@ console.log("\nStarting processing of github repos...");
 await (async () => {
     // sample accounts just for early testing.
     // ultimately most of the accounts should come from the government.github.com
-    // with extra additions of non-qualifying accounts. 
+    // with extra additions of non-qualifying accounts.
     let accounts = [
         { name: "uktrade", type: "org",
             include: [
@@ -164,6 +165,7 @@ await (async () => {
         .map(({value}) => value)
         .flat()
     );
+
     await cacheRepositories(repositories);
 })();
 
