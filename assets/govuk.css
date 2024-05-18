@@ -43,7 +43,7 @@
 
 
 :root {
-  --govuk-frontend-version: "5.1.0";
+  --govuk-frontend-version: "5.2.0";
   --govuk-frontend-breakpoint-mobile: 20rem;
   --govuk-frontend-breakpoint-tablet: 40.0625rem;
   --govuk-frontend-breakpoint-desktop: 48.0625rem;
@@ -2617,6 +2617,7 @@ p + .govuk-heading-s,
 }
 
 .govuk-checkboxes__input {
+  z-index: 1;
   width: 44px;
   height: 44px;
   margin: 0;
@@ -4813,6 +4814,7 @@ p + .govuk-heading-s,
 }
 
 .govuk-radios__input {
+  z-index: 1;
   width: 44px;
   height: 44px;
   margin: 0;
@@ -8313,6 +8315,10 @@ a:focus .x-govuk-code--inline {
 }
 
 .x-govuk-code--block {
+  font-family: open-dyslexic, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.4;
   margin-bottom: 15px;
@@ -8320,6 +8326,11 @@ a:focus .x-govuk-code--inline {
   overflow: auto;
   padding: 20px;
   scrollbar-color: #b1b4b6 #f3f2f1;
+}
+@media print {
+  .x-govuk-code--block {
+    font-family: sans-serif;
+  }
 }
 @media (min-width: 40.0625em) {
   .x-govuk-code--block {
@@ -8798,8 +8809,8 @@ a:focus .x-govuk-code--inline {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
   color: #505a5f;
   display: inline-block;
   margin: 0;
@@ -8811,13 +8822,13 @@ a:focus .x-govuk-code--inline {
 }
 @media (min-width: 40.0625em) {
   .app-document-list__attribute {
-    font-size: 0.875rem;
-    line-height: 1.4285714286;
+    font-size: 1rem;
+    line-height: 1.25;
   }
 }
 @media print {
   .app-document-list__attribute {
-    font-size: 12pt;
+    font-size: 14pt;
     line-height: 1.2;
   }
 }
@@ -8907,8 +8918,8 @@ a[aria-describedby=footnotes-label] {
   -moz-osx-font-smoothing: grayscale;
   font-variant-numeric: tabular-nums;
   font-weight: 400;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
 }
 @media print {
   a[aria-describedby=footnotes-label] {
@@ -8917,13 +8928,13 @@ a[aria-describedby=footnotes-label] {
 }
 @media (min-width: 40.0625em) {
   a[aria-describedby=footnotes-label] {
-    font-size: 0.875rem;
-    line-height: 1.4285714286;
+    font-size: 1rem;
+    line-height: 1.25;
   }
 }
 @media print {
   a[aria-describedby=footnotes-label] {
-    font-size: 12pt;
+    font-size: 14pt;
     line-height: 1.2;
   }
 }
